@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asistente Inteligente de Recursos Educativos</title>
+  <!-- Tailwind vía CDN: sin build step ni node_modules, coherente con un entregable .zip ejecutable -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+
+  <header class="bg-slate-900 text-white py-6 px-4">
+    <div class="max-w-5xl mx-auto">
+      <h1 class="text-2xl font-semibold">Asistente Inteligente para Búsqueda y Recomendación de Recursos Educativos</h1>
+      <p class="text-slate-300 text-sm mt-1">Algoritmos de búsqueda, reglas de inferencia y recomendación asistida por IA (con fallback local)</p>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8 space-y-8">
+
+    <!-- ============ 1. Formulario de perfil ============ -->
+    <section class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-semibold mb-4">1. Tu perfil</h2>
+      <form id="form-perfil" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium mb-1" for="tema">Tema de interés</label>
+          <input id="tema" name="tema" type="text" required
+                 placeholder="Ej: Programación, Inteligencia Artificial..."
+                 class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1" for="nivel">Nivel</label>
+          <select id="nivel" name="nivel" required
+                  class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="">Selecciona...</option>
+            <option>Básico</option>
+            <option>Intermedio</option>
+            <option>Avanzado</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1" for="modalidad">Modalidad preferida</label>
+          <select id="modalidad" name="modalidad" required
+                  class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="">Selecciona...</option>
+            <option>Lectura</option>
+            <option>Video</option>
+            <option>Práctica</option>
+            <option>Proyecto</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1" for="horas_disponibles">Horas disponibles a la semana</label>
+          <input id="horas_disponibles" name="horas_disponibles" type="number" min="1" step="1" required
+                 placeholder="Ej: 4"
+                 class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium mb-1" for="objetivo">Objetivo de aprendizaje</label>
+          <textarea id="objetivo" name="objetivo" required rows="2"
+                    placeholder="Ej: Quiero aprender a programar en Python para análisis de datos"
+                    class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium mb-1" for="consulta">Consulta de búsqueda</label>
+          <input id="consulta" name="consulta" type="text"
+                 placeholder="Palabras a buscar (usadas por la búsqueda lineal y la similitud semántica)"
+                 class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+      </form>
+      <p id="errores-perfil" class="text-red-600 text-sm mt-3 hidden"></p>
+    </section>
+
+    <!-- ============ 2. Selector de algoritmo ============ -->
+    <section class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-semibold mb-4">2. Algoritmo de búsqueda</h2>
+      <div id="botones-algoritmo" class="flex flex-wrap gap-2 mb-4">
+        <button data-algoritmo="lineal" class="btn-algoritmo bg-slate-100 text-slate-700">Lineal</button>
+        <button data-algoritmo="binaria" class="btn-algoritmo bg-slate-100 text-slate-700">Binaria</button>
+        <button data-algoritmo="dfs" class="btn-algoritmo bg-slate-100 text-slate-700">DFS</button>
+        <button data-algoritmo="bfs" class="btn-algoritmo bg-slate-100 text-slate-700">BFS</button>
+        <button data-algoritmo="heuristica" class="btn-algoritmo bg-slate-100 text-slate-700">Heurística</button>
+        <button data-algoritmo="comparar" class="btn-algoritmo bg-teal-600 text-white">Comparar los 5</button>
+      </div>
+
+      <div id="input-titulo-exacto" class="hidden mb-4">
+        <label class="block text-sm font-medium mb-1" for="titulo_exacto">Título exacto a buscar (requerido por la búsqueda binaria)</label>
+        <input id="titulo_exacto" type="text" placeholder="Ej: Fundamentos de Python"
+               class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+      </div>
+
+      <div id="resultado-busqueda" class="text-sm"></div>
+    </section>
+
+    <!-- ============ 3. Recomendación personalizada ============ -->
+    <section class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-semibold mb-2">3. Recomendación personalizada</h2>
+      <p class="text-sm text-slate-500 mb-4">
+        Combina la búsqueda heurística con el motor de reglas SI-ENTONCES y los
+        servicios de IA (Cohere para similitud semántica, OpenRouter para el plan
+        de estudio), con fallback local si no hay claves o red disponible.
+      </p>
+      <button id="btn-recomendar"
+              class="bg-indigo-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-indigo-700">
+        Generar recomendación
+      </button>
+      <div id="resultado-recomendacion" class="mt-6 text-sm"></div>
+    </section>
+
+  </main>
+
+  <style>
+    .btn-algoritmo { padding: 0.375rem 0.75rem; border-radius: 0.25rem; font-size: 0.875rem; font-weight: 500; }
+    .btn-algoritmo:hover { filter: brightness(0.95); }
+    .btn-algoritmo.activo { background-color: #4f46e5; color: white; }
+  </style>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
