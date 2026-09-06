@@ -1,0 +1,222 @@
+[
+  {
+    "codigo": "IA001",
+    "titulo": "Introducción a la Inteligencia Artificial",
+    "categoria": "Inteligencia Artificial",
+    "subcategoria": "Fundamentos",
+    "nivel": "Básico",
+    "modalidad": "Lectura",
+    "duracion_horas": 4,
+    "palabras_clave": ["IA", "algoritmos", "fundamentos"],
+    "descripcion": "Recurso introductorio sobre conceptos y evolución de la IA."
+  },
+  {
+    "codigo": "IA002",
+    "titulo": "Algoritmos de Búsqueda Clásicos",
+    "categoria": "Inteligencia Artificial",
+    "subcategoria": "Búsqueda",
+    "nivel": "Intermedio",
+    "modalidad": "Lectura",
+    "duracion_horas": 6,
+    "palabras_clave": ["búsqueda", "algoritmos", "BFS", "DFS"],
+    "descripcion": "Explica búsqueda lineal, binaria, en profundidad y en anchura con ejemplos."
+  },
+  {
+    "codigo": "IA003",
+    "titulo": "Búsqueda Heurística y funciones de evaluación",
+    "categoria": "Inteligencia Artificial",
+    "subcategoria": "Búsqueda",
+    "nivel": "Avanzado",
+    "modalidad": "Video",
+    "duracion_horas": 5,
+    "palabras_clave": ["heurística", "búsqueda", "optimización"],
+    "descripcion": "Cómo diseñar funciones de puntuación h(n) para priorizar resultados."
+  },
+  {
+    "codigo": "IA004",
+    "titulo": "Sistemas Basados en Reglas",
+    "categoria": "Inteligencia Artificial",
+    "subcategoria": "Fundamentos",
+    "nivel": "Intermedio",
+    "modalidad": "Lectura",
+    "duracion_horas": 3,
+    "palabras_clave": ["reglas", "inferencia", "IA"],
+    "descripcion": "Motores de inferencia SI-ENTONCES y su aplicación en sistemas expertos."
+  },
+  {
+    "codigo": "IA005",
+    "titulo": "Taller Práctico de Machine Learning",
+    "categoria": "Inteligencia Artificial",
+    "subcategoria": "Aprendizaje Automático",
+    "nivel": "Intermedio",
+    "modalidad": "Práctica",
+    "duracion_horas": 8,
+    "palabras_clave": ["machine learning", "modelos", "entrenamiento"],
+    "descripcion": "Ejercicios guiados de entrenamiento y evaluación de modelos simples."
+  },
+  {
+    "codigo": "PY001",
+    "titulo": "Fundamentos de Python",
+    "categoria": "Programación",
+    "subcategoria": "Python",
+    "nivel": "Básico",
+    "modalidad": "Lectura",
+    "duracion_horas": 4,
+    "palabras_clave": ["python", "sintaxis", "básico"],
+    "descripcion": "Variables, tipos de datos, control de flujo y funciones en Python."
+  },
+  {
+    "codigo": "PY002",
+    "titulo": "Estructuras de Datos en Python",
+    "categoria": "Programación",
+    "subcategoria": "Estructuras de Datos",
+    "nivel": "Intermedio",
+    "modalidad": "Lectura",
+    "duracion_horas": 6,
+    "palabras_clave": ["python", "listas", "diccionarios", "estructuras"],
+    "descripcion": "Listas, tuplas, diccionarios y sets, con casos de uso comparados."
+  },
+  {
+    "codigo": "PY003",
+    "titulo": "Proyecto: Automatización con Python",
+    "categoria": "Programación",
+    "subcategoria": "Buenas Prácticas",
+    "nivel": "Intermedio",
+    "modalidad": "Proyecto",
+    "duracion_horas": 10,
+    "palabras_clave": ["python", "código", "automatización", "proyecto"],
+    "descripcion": "Construye un script real de automatización de tareas repetitivas."
+  },
+  {
+    "codigo": "PY004",
+    "titulo": "Buenas Prácticas de Programación",
+    "categoria": "Programación",
+    "subcategoria": "Buenas Prácticas",
+    "nivel": "Básico",
+    "modalidad": "Lectura",
+    "duracion_horas": 3,
+    "palabras_clave": ["código", "buenas prácticas", "clean code"],
+    "descripcion": "Convenciones de nombres, comentarios útiles y legibilidad del código."
+  },
+  {
+    "codigo": "PY005",
+    "titulo": "Programación Orientada a Objetos en Python",
+    "categoria": "Programación",
+    "subcategoria": "Python",
+    "nivel": "Intermedio",
+    "modalidad": "Video",
+    "duracion_horas": 5,
+    "palabras_clave": ["python", "POO", "código", "clases"],
+    "descripcion": "Clases, herencia y encapsulamiento aplicados con ejemplos cortos."
+  },
+  {
+    "codigo": "CD001",
+    "titulo": "Introducción a la Ciencia de Datos",
+    "categoria": "Ciencia de Datos",
+    "subcategoria": "Análisis Exploratorio",
+    "nivel": "Básico",
+    "modalidad": "Lectura",
+    "duracion_horas": 4,
+    "palabras_clave": ["datos", "análisis", "ciencia de datos"],
+    "descripcion": "Panorama general del flujo de trabajo en proyectos de datos."
+  },
+  {
+    "codigo": "CD002",
+    "titulo": "Análisis Exploratorio de Datos con Pandas",
+    "categoria": "Ciencia de Datos",
+    "subcategoria": "Análisis Exploratorio",
+    "nivel": "Intermedio",
+    "modalidad": "Práctica",
+    "duracion_horas": 6,
+    "palabras_clave": ["pandas", "python", "datos", "análisis"],
+    "descripcion": "Limpieza y exploración de datasets tabulares paso a paso."
+  },
+  {
+    "codigo": "CD003",
+    "titulo": "Visualización de Datos con Matplotlib",
+    "categoria": "Ciencia de Datos",
+    "subcategoria": "Visualización",
+    "nivel": "Básico",
+    "modalidad": "Video",
+    "duracion_horas": 3,
+    "palabras_clave": ["visualización", "gráficos", "datos"],
+    "descripcion": "Cómo elegir y construir el gráfico correcto para cada tipo de dato."
+  },
+  {
+    "codigo": "CD004",
+    "titulo": "Estadística Aplicada para Datos",
+    "categoria": "Ciencia de Datos",
+    "subcategoria": "Estadística",
+    "nivel": "Avanzado",
+    "modalidad": "Lectura",
+    "duracion_horas": 8,
+    "palabras_clave": ["estadística", "probabilidad", "datos"],
+    "descripcion": "Distribuciones, hipótesis y correlación aplicadas a casos reales."
+  },
+  {
+    "codigo": "CD005",
+    "titulo": "Proyecto de Análisis de Datos Reales",
+    "categoria": "Ciencia de Datos",
+    "subcategoria": "Análisis Exploratorio",
+    "nivel": "Avanzado",
+    "modalidad": "Proyecto",
+    "duracion_horas": 12,
+    "palabras_clave": ["proyecto", "datos", "python", "análisis"],
+    "descripcion": "Aplica todo el flujo de análisis sobre un dataset abierto de principio a fin."
+  },
+  {
+    "codigo": "WEB001",
+    "titulo": "Fundamentos de Desarrollo Web",
+    "categoria": "Desarrollo Web",
+    "subcategoria": "Frontend",
+    "nivel": "Básico",
+    "modalidad": "Lectura",
+    "duracion_horas": 4,
+    "palabras_clave": ["html", "css", "web", "fundamentos"],
+    "descripcion": "Estructura de páginas web con HTML5 y estilos base con CSS3."
+  },
+  {
+    "codigo": "WEB002",
+    "titulo": "Backend con Flask",
+    "categoria": "Desarrollo Web",
+    "subcategoria": "Backend",
+    "nivel": "Intermedio",
+    "modalidad": "Práctica",
+    "duracion_horas": 6,
+    "palabras_clave": ["flask", "python", "backend", "código"],
+    "descripcion": "Rutas, plantillas Jinja2 y manejo de formularios en Flask."
+  },
+  {
+    "codigo": "WEB003",
+    "titulo": "Diseño de APIs REST",
+    "categoria": "Desarrollo Web",
+    "subcategoria": "APIs",
+    "nivel": "Intermedio",
+    "modalidad": "Lectura",
+    "duracion_horas": 5,
+    "palabras_clave": ["api", "rest", "backend"],
+    "descripcion": "Principios REST, verbos HTTP y códigos de estado bien usados."
+  },
+  {
+    "codigo": "WEB004",
+    "titulo": "Taller de Frontend con JavaScript",
+    "categoria": "Desarrollo Web",
+    "subcategoria": "Frontend",
+    "nivel": "Intermedio",
+    "modalidad": "Práctica",
+    "duracion_horas": 7,
+    "palabras_clave": ["javascript", "frontend", "web"],
+    "descripcion": "Manipulación del DOM y consumo de APIs desde el navegador."
+  },
+  {
+    "codigo": "WEB005",
+    "titulo": "Proyecto Full Stack",
+    "categoria": "Desarrollo Web",
+    "subcategoria": "Backend",
+    "nivel": "Avanzado",
+    "modalidad": "Proyecto",
+    "duracion_horas": 15,
+    "palabras_clave": ["proyecto", "full stack", "python", "javascript"],
+    "descripcion": "Construye una aplicación completa integrando frontend, backend y una API externa."
+  }
+]
