@@ -54,6 +54,34 @@ function mostrarErrores(contenedorId, errores) {
 }
 
 // -----------------------------------------------------------------------
+// Toasts: notificaciones breves que confirman una acción (no para leer
+// contenido largo -- para eso usamos el cuadro persistente del plan de
+// estudio, más abajo).
+// -----------------------------------------------------------------------
+function mostrarToast(mensaje, tipo = "exito") {
+  const contenedor = document.getElementById("toast-container");
+
+  const colores = {
+    exito: "bg-emerald-600",
+    info: "bg-indigo-600",
+    error: "bg-red-600",
+  };
+
+  const toast = document.createElement("div");
+  toast.className = `toast ${colores[tipo] || colores.info} text-white text-sm rounded-lg px-4 py-3 shadow-lg`;
+  toast.textContent = mensaje;
+  contenedor.appendChild(toast);
+
+  // Forzar reflow antes de agregar la clase, para que la transición de entrada se vea
+  requestAnimationFrame(() => toast.classList.add("mostrar"));
+
+  setTimeout(() => {
+    toast.classList.remove("mostrar");
+    setTimeout(() => toast.remove(), 300); // espera a que termine la transición de salida
+  }, 3500);
+}
+
+// -----------------------------------------------------------------------
 // Selector de algoritmo
 // -----------------------------------------------------------------------
 
@@ -186,13 +214,39 @@ function renderizarComparacion(resultado, contenedor) {
 // -----------------------------------------------------------------------
 function tarjetaRecursoSimple(recurso) {
   return `
-    <div class="border border-slate-200 rounded p-3 text-xs w-56">
-      <p class="font-medium mb-1">${escaparHtml(recurso.titulo)}</p>
+    <div class="border border-slate-200 rounded-lg p-3 text-xs w-56 hover:border-indigo-300 hover:shadow-sm transition">
+      <p class="font-medium mb-1 text-slate-800">${escaparHtml(recurso.titulo)}</p>
       <p class="text-slate-500">${escaparHtml(recurso.categoria)} · ${escaparHtml(recurso.nivel)}</p>
       <p class="text-slate-500">${escaparHtml(recurso.modalidad)} · ${recurso.duracion_horas}h</p>
     </div>
   `;
 }
+
+// -----------------------------------------------------------------------
+// Modal: abre, cierra, y se cierra solo con Esc o clic en el fondo.
+// Se usa para mostrar la recomendación completa en un espacio dedicado,
+// más fácil de leer que mezclado con el resto de la página.
+// -----------------------------------------------------------------------
+const modalOverlay = document.getElementById("modal-overlay");
+const modalContenido = document.getElementById("modal-contenido");
+
+function abrirModal() {
+  modalOverlay.classList.remove("hidden");
+  document.body.style.overflow = "hidden"; // evita el scroll de fondo mientras el modal está abierto
+}
+
+function cerrarModal() {
+  modalOverlay.classList.add("hidden");
+  document.body.style.overflow = "";
+}
+
+document.getElementById("btn-cerrar-modal").addEventListener("click", cerrarModal);
+modalOverlay.addEventListener("click", (evento) => {
+  if (evento.target === modalOverlay) cerrarModal(); // clic en el fondo oscuro, no en la caja
+});
+document.addEventListener("keydown", (evento) => {
+  if (evento.key === "Escape" && !modalOverlay.classList.contains("hidden")) cerrarModal();
+});
 
 // -----------------------------------------------------------------------
 // Recomendación personalizada (reglas + IA)
@@ -203,8 +257,8 @@ document.getElementById("btn-recomendar").addEventListener("click", async () => 
   mostrarErrores("errores-perfil", errores);
   if (errores.length > 0) return;
 
-  const contenedor = document.getElementById("resultado-recomendacion");
-  contenedor.innerHTML = '<p class="text-slate-400">Generando recomendación...</p>';
+  const estado = document.getElementById("resultado-recomendacion");
+  estado.innerHTML = '<p class="text-slate-400">Generando recomendación...</p>';
 
   try {
     const respuesta = await fetch("/api/recomendar", {
@@ -219,21 +273,23 @@ document.getElementById("btn-recomendar").addEventListener("click", async () => 
     const datos = await respuesta.json();
 
     if (!respuesta.ok) {
-      contenedor.innerHTML = `<p class="text-red-600">${escaparHtml((datos.errores || ["Error inesperado."]).join(" "))}</p>`;
+      estado.innerHTML = `<p class="text-red-600">${escaparHtml((datos.errores || ["Error inesperado."]).join(" "))}</p>`;
       return;
     }
 
-    renderizarRecomendacion(datos, contenedor);
+    estado.innerHTML = ""; // el resultado ahora vive en el modal, no aquí abajo
+    renderizarRecomendacion(datos, modalContenido);
+    abrirModal();
   } catch (error) {
-    contenedor.innerHTML = '<p class="text-red-600">No se pudo conectar con el servidor.</p>';
+    estado.innerHTML = '<p class="text-red-600">No se pudo conectar con el servidor.</p>';
   }
 });
 
 function badgeFuente(fuente) {
   const esLocal = fuente === "fallback_local";
   const clase = esLocal ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-800";
-  const texto = esLocal ? "Modo fallback local" : `Fuente: ${fuente}`;
-  return `<span class="inline-block px-2 py-0.5 rounded text-xs font-medium ${clase}">${escaparHtml(texto)}</span>`;
+  const texto = esLocal ? "Modo fallback local" : `Generado con ${fuente}`;
+  return `<span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium ${clase}">${escaparHtml(texto)}</span>`;
 }
 
 function renderizarRecomendacion(datos, contenedor) {
@@ -248,35 +304,50 @@ function renderizarRecomendacion(datos, contenedor) {
 
   const tarjetasHtml = datos.recursos_recomendados
     .map((recurso) => `
-      <div class="border border-slate-200 rounded p-4">
-        <p class="font-medium mb-1">${escaparHtml(recurso.titulo)}</p>
-        <p class="text-xs text-slate-500 mb-2">${escaparHtml(recurso.categoria)} / ${escaparHtml(recurso.subcategoria)} · ${escaparHtml(recurso.nivel)} · ${escaparHtml(recurso.modalidad)} · ${recurso.duracion_horas}h</p>
-        <p class="text-xs text-slate-600">${escaparHtml(recurso.descripcion)}</p>
-        <p class="text-xs font-medium text-indigo-600 mt-2">Puntaje final: ${recurso.puntaje_final} pts</p>
+      <div class="border border-slate-200 rounded-lg p-4 hover:border-indigo-300 hover:shadow-sm transition">
+        <p class="font-medium mb-1 text-slate-800">${escaparHtml(recurso.titulo)}</p>
+        <p class="text-sm text-slate-500 mb-2">${escaparHtml(recurso.categoria)} / ${escaparHtml(recurso.subcategoria)} · ${escaparHtml(recurso.nivel)} · ${escaparHtml(recurso.modalidad)} · ${recurso.duracion_horas}h</p>
+        <p class="text-sm text-slate-600">${escaparHtml(recurso.descripcion)}</p>
+        <p class="text-sm font-medium text-indigo-600 mt-2">Puntaje final: ${recurso.puntaje_final} pts</p>
       </div>
     `)
     .join("");
 
+  // El plan de estudio se separa en párrafos (una línea en blanco = un
+  // párrafo nuevo) para que se lea como texto corrido, no como un bloque
+  // de código -- es lo que pediste: llamativo pero pulcro, fácil de leer.
+  const parrafosPlan = datos.plan_estudio.texto
+    .split("\n")
+    .filter((linea) => linea.trim() !== "")
+    .map((linea) => `<p class="mb-3 last:mb-0 leading-relaxed">${escaparHtml(linea)}</p>`)
+    .join("");
+
+  const esLocalPlan = datos.plan_estudio.fuente === "fallback_local";
+  const colorBordePlan = esLocalPlan ? "border-amber-400" : "border-indigo-500";
+  const colorFondoPlan = esLocalPlan ? "bg-amber-50" : "bg-indigo-50";
+
   contenedor.innerHTML = `
     <div class="mb-6">
-      <h3 class="font-medium mb-2">Reglas activadas</h3>
-      <ul class="space-y-1 text-sm">${reglasHtml}</ul>
+      <h3 class="font-semibold text-slate-800 mb-2">Reglas activadas</h3>
+      <ul class="space-y-1.5">${reglasHtml}</ul>
     </div>
 
     <div class="mb-6">
-      <div class="flex items-center gap-2 mb-2">
-        <h3 class="font-medium">Recursos recomendados</h3>
+      <div class="flex items-center gap-2 mb-3">
+        <h3 class="font-semibold text-slate-800">Recursos recomendados</h3>
         ${badgeFuente(datos.similitud.fuente)}
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">${tarjetasHtml}</div>
+      <div class="grid grid-cols-1 gap-3">${tarjetasHtml}</div>
     </div>
 
     <div>
-      <div class="flex items-center gap-2 mb-2">
-        <h3 class="font-medium">Plan de estudio sugerido</h3>
+      <div class="flex items-center gap-2 mb-3">
+        <h3 class="font-semibold text-slate-800">📘 Plan de estudio sugerido</h3>
         ${badgeFuente(datos.plan_estudio.fuente)}
       </div>
-      <pre class="bg-slate-50 rounded p-4 text-xs whitespace-pre-wrap font-sans">${escaparHtml(datos.plan_estudio.texto)}</pre>
+      <div class="${colorFondoPlan} border-l-4 ${colorBordePlan} rounded-r-lg p-5 text-slate-700 shadow-sm">
+        ${parrafosPlan}
+      </div>
     </div>
   `;
 }
